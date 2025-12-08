@@ -27,16 +27,19 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
 
-#include <gnuradio/unittests.h>
 #include "qa_nacl.h"
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <string>
 
 int
 main (int argc, char **argv)
 {
   CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(get_unittest_path("nacl.xml").c_str());
+  const char* test_output_dir = std::getenv("GR_TEST_OUTPUT_DIR");
+  std::string xml_filename = test_output_dir ? std::string(test_output_dir) + "/nacl.xml" : "nacl.xml";
+  std::ofstream xmlfile(xml_filename.c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest(qa_nacl::suite());

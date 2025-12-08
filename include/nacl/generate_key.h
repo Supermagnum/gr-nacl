@@ -23,6 +23,7 @@
 
 #include <nacl/api.h>
 #include <gnuradio/block.h>
+#include <memory>
 
 namespace gr {
   namespace nacl {
@@ -35,7 +36,7 @@ namespace gr {
     class NACL_API generate_key : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<generate_key> sptr;
+      typedef std::shared_ptr<generate_key> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of nacl::generate_key.

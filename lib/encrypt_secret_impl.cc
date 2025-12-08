@@ -25,10 +25,13 @@
 #include "encrypt_secret_impl.h"
 
 #include <fstream>
+#include <vector>
 #include "sodium.h"
+#include <boost/bind/bind.hpp>
 
 namespace gr {
   namespace nacl {
+    using namespace boost::placeholders;
 
     encrypt_secret::sptr
     encrypt_secret::make(std::string filename_key)
@@ -90,12 +93,16 @@ namespace gr {
             randombytes_buf(nonce, sizeof(nonce));
             
             // encrypt message
-            __GR_VLA(unsigned char, data_char, data.size());
+            std::vector<unsigned char> data_char(data.size());
             size_t data_char_sz = (sizeof(unsigned char) * data.size());
             for(int k=0; k<data.size(); k++) data_char[k] = (unsigned char)data[k];
             size_t ciphertext_len = crypto_secretbox_MACBYTES + data_char_sz;
-            __GR_VLA(unsigned char, ciphertext, ciphertext_len);
-            crypto_secretbox_easy(ciphertext, data_char, data_char_sz, nonce, d_key);
+            std::vector<unsigned char> ciphertext(ciphertext_len);
+            int encrypt_status = crypto_secretbox_easy(ciphertext.data(), data_char.data(), data_char_sz, nonce, d_key);
+            if(encrypt_status != 0) {
+                std::cout << "Failed to encrypt message." << std::endl;
+                return;
+            }
             
             // repack msg with symbol 'msg_encrypted' and nonce with symbol 'nonce'
             std::vector<uint8_t> msg_encrypted; msg_encrypted.resize(ciphertext_len);

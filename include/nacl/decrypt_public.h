@@ -24,6 +24,7 @@
 
 #include <nacl/api.h>
 #include <gnuradio/block.h>
+#include <memory>
 
 namespace gr {
   namespace nacl {
@@ -36,7 +37,7 @@ namespace gr {
     class NACL_API decrypt_public : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<decrypt_public> sptr;
+      typedef std::shared_ptr<decrypt_public> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of nacl::decrypt_public.
