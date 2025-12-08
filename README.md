@@ -7,10 +7,13 @@ The gr-nacl module for GNU Radio provides functionality from the NaCl crypto lib
 
 The functionality can be tested with the example flowgraphs for GNU Radio Companion at the subfolder examples/ or directly with the provided test-cases for ctest.
 
+**Compatibility**  
+This module has been updated for GNU Radio 3.10+ compatibility. It uses `std::shared_ptr` instead of `boost::shared_ptr` and `std::vector` instead of the deprecated `__GR_VLA` macro.
+
 **Install guide (Linux)**  
 Change to any folder in your home directory and enter following commands in your terminal. Check out the section 'Dependency' first. As well, you can install GNU Radio with PyBOMBS and use the provided install recipe for gr-nacl. The recipe builds and installs the dependency automatically.
 
-`git clone https://github.com/stwunsch/gr-nacl.git` // clone this repository  
+`git clone https://github.com/Supermagnum/gr-nacl.git` // clone this repository  
 `cd gr-nacl/`  
 `mkdir build` // make build folder  
 `cd build/`  
@@ -23,7 +26,7 @@ Change to any folder in your home directory and enter following commands in your
 The following commands will work if you have installed Gnuradio and libsodium via Macports.
 Change to any folder in your home directory and enter following commands in your terminal.
 
-`git clone https://github.com/stwunsch/gr-nacl.git` // clone this repository  
+`git clone https://github.com/Supermagnum/gr-nacl.git` // clone this repository  
 `cd gr-nacl/`  
 `mkdir build` // make build folder  
 `cd build/`  
@@ -34,7 +37,8 @@ Change to any folder in your home directory and enter following commands in your
 
 **Development platform**  
 Ubuntu 15.04  
-GNU Radio 3.7.6.1  
+GNU Radio 3.7.6.1 (original)  
+GNU Radio 3.10+ (updated for compatibility)  
 
 **Dependency**  
 The NaCl (pronounced 'salt') crypto library [2] by Daniel J. Bernstein, Tanja Lange and Peter Schwabe has a well maintained fork called 'libsodium' [3]. Follow the instructions to build and install it.
