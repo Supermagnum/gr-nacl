@@ -18,20 +18,41 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Include python install macros
+# Python bindings using pybind11
 ########################################################################
-include(GrPython)
-if(NOT PYTHONINTERP_FOUND)
+find_package(Python3 COMPONENTS Interpreter Development)
+find_package(pybind11 QUIET)
+
+if(NOT Python3_FOUND OR NOT pybind11_FOUND)
+    message(STATUS "Python3 or pybind11 not found - skipping Python bindings")
     return()
 endif()
 
-########################################################################
-# Install python sources
-########################################################################
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/nacl
+# Create Python bindings
+pybind11_add_module(nacl_python
+    nacl_python.cc
+)
+
+target_include_directories(nacl_python PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${GNURADIO_ALL_INCLUDE_DIRS}
+)
+
+target_link_libraries(nacl_python PRIVATE
+    gnuradio-nacl
+    gnuradio-runtime
+    gnuradio-pmt
+)
+
+# Install Python module
+install(TARGETS nacl_python
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages
+)
+
+# Install Python wrapper module to gnuradio package
+install(FILES gnuradio_nacl_init.py
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages/gnuradio
+    RENAME nacl.py
 )
 
 ########################################################################

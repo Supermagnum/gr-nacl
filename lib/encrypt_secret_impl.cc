@@ -27,11 +27,10 @@
 #include <fstream>
 #include <vector>
 #include "sodium.h"
-#include <boost/bind/bind.hpp>
+#include <functional>
 
 namespace gr {
   namespace nacl {
-    using namespace boost::placeholders;
 
     encrypt_secret::sptr
     encrypt_secret::make(std::string filename_key)
@@ -65,7 +64,7 @@ namespace gr {
         // Register input message port
         d_port_id_in = pmt::mp("Msg clear");
         message_port_register_in(d_port_id_in);
-        set_msg_handler(d_port_id_in, boost::bind(&encrypt_secret_impl::handle_msg, this, _1));
+        set_msg_handler(d_port_id_in, [this](pmt::pmt_t msg) { this->handle_msg(msg); });
         
         // Register output message port
         d_port_id_out = pmt::mp("Msg encrypted");
