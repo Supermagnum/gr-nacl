@@ -22,7 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-import nacl_swig as nacl
+import nacl_python as nacl
 import pmt
 from time import sleep
 
@@ -62,8 +62,8 @@ class qa_decrypt_public (gr_unittest.TestCase):
         msg_out = debug.get_message(0)
         msg_symbol = pmt.symbol_to_string(pmt.nth(0,pmt.nth(0,msg_out)))
         msg_decrypted = pmt.u8vector_elements(pmt.nth(1,pmt.nth(0,msg_out)))
-        print msg_symbol, msg_decrypted
-        print "msg_clear", data
+        print(msg_symbol, msg_decrypted)
+        print("msg_clear", data)
         
         for k in range(len(data)):
             self.assertEqual(data[k],msg_decrypted[k])

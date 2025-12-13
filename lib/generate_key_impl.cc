@@ -47,8 +47,8 @@ namespace gr {
     {
         unsigned char *key = new unsigned char[crypto_secretbox_KEYBYTES];
         
-        // generate keypair
-        randombytes_buf(key,sizeof(key));
+        // generate key
+        randombytes_buf(key, crypto_secretbox_KEYBYTES);
         std::cout << "Key " << filename_key << " generated successfully." << std::endl;
         
         // save keys to files

@@ -23,10 +23,10 @@ This is the GNU Radio NACL module. Place your Python package
 description here (python/__init__.py).
 '''
 
-# import swig generated symbols into the nacl namespace
+# import pybind11 generated symbols into the nacl namespace
 try:
 	# this might fail if the module is python-only
-	from nacl_swig import *
+	from nacl_python import *
 except ImportError:
 	pass
 

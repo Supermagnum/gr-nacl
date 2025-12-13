@@ -20,7 +20,7 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-import nacl_swig as nacl
+import nacl_python as nacl
 
 class qa_crypt_tagged_stream (gr_unittest.TestCase):
 
@@ -33,7 +33,7 @@ class qa_crypt_tagged_stream (gr_unittest.TestCase):
     def test_001_t (self):
         # set up fg
         data = [ord('t'),ord('e'),ord('s'),ord('t'),ord('#')]*8
-        packet_len = len(data)/8
+        packet_len = len(data)//8
         key = "12345678123456781234567812345678"
         nonce = "abcdefghabcdefghabcdefgh"
         rotate_nonce = True
@@ -50,18 +50,18 @@ class qa_crypt_tagged_stream (gr_unittest.TestCase):
         
         self.tb.run ()
         # print data
-        print "INPUT DATA"
+        print("INPUT DATA")
         for k in range(len(data)):
-            print chr(data[k]),
-        print
-        print "INPUT DATA ENCRYPTED"
+            print(chr(data[k]), end=' ')
+        print()
+        print("INPUT DATA ENCRYPTED")
         for k in range(len(sink_encrypt.data())):
-            print chr(sink_encrypt.data()[k]),
-        print
-        print "OUTPUT DATA (EQUALS INPUT DATA ENCRYPTED AND DECRYPTED)"
+            print(chr(sink_encrypt.data()[k]), end=' ')
+        print()
+        print("OUTPUT DATA (EQUALS INPUT DATA ENCRYPTED AND DECRYPTED)")
         for k in range(len(sink_decrypt.data())):
-            print chr(sink_decrypt.data()[k]),
-        print
+            print(chr(sink_decrypt.data()[k]), end=' ')
+        print()
         
         # check data
         data_out =  sink_decrypt.data()

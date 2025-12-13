@@ -97,14 +97,18 @@ namespace gr {
          // Tell runtime system how many output items we produced.
         if(status==0){
             if(d_rotate_nonce){
-                // Store first bit
-                d_nonce[0] = 0b00000000;
-                unsigned char store_bit = 0b10000000&d_nonce[0]; // FIXME: not final 
+                // Store first bit of first byte before shifting
+                unsigned char store_bit = 0b10000000 & d_nonce[0];
                 
-                // Shift left char array and add stored bit at the end // FIXME: check this implementation!
+                // Shift left char array (big-endian style: MSB of first byte becomes LSB of last byte)
                 for(int k=0; k<crypto_stream_NONCEBYTES; k++) d_nonce[k] = d_nonce[k] << 1;
-                if(store_bit==0) d_nonce[crypto_stream_NONCEBYTES-1] = d_nonce[crypto_stream_NONCEBYTES-1]&0b00000000;
-                else d_nonce[crypto_stream_NONCEBYTES-1] = d_nonce[crypto_stream_NONCEBYTES-1]|0b00000001;
+                
+                // Add stored bit at the end (LSB of last byte)
+                if(store_bit==0) {
+                    d_nonce[crypto_stream_NONCEBYTES-1] = d_nonce[crypto_stream_NONCEBYTES-1] & 0b11111110;
+                } else {
+                    d_nonce[crypto_stream_NONCEBYTES-1] = d_nonce[crypto_stream_NONCEBYTES-1] | 0b00000001;
+                }
             }
             
             return ninput_items[0];

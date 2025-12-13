@@ -21,7 +21,7 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-import nacl_swig as nacl
+import nacl_python as nacl
 import pmt
 from time import sleep
 
@@ -54,10 +54,22 @@ class qa_encrypt_public (gr_unittest.TestCase):
         
         # check results
         msg_stored = debug.get_message(0)
+        self.assertIsNotNone(msg_stored, "Encrypted message should be produced")
+        
         nonce = pmt.nth(0,msg_stored)
         msg_encrypted = pmt.nth(1,msg_stored)
-        print pmt.symbol_to_string(pmt.nth(0,nonce)), pmt.u8vector_elements(pmt.nth(1,nonce))
-        print pmt.symbol_to_string(pmt.nth(0,msg_encrypted)), pmt.u8vector_elements(pmt.nth(1,msg_encrypted))
+        
+        # Verify nonce is present and has correct size
+        self.assertEqual(pmt.symbol_to_string(pmt.nth(0,nonce)), "nonce", "Nonce should be tagged correctly")
+        nonce_vec = pmt.u8vector_elements(pmt.nth(1,nonce))
+        self.assertEqual(len(nonce_vec), 24, "Nonce should be 24 bytes (crypto_box_NONCEBYTES)")
+        
+        # Verify encrypted message is present and different from original
+        self.assertEqual(pmt.symbol_to_string(pmt.nth(0,msg_encrypted)), "msg_encrypted", "Message should be tagged as encrypted")
+        encrypted_vec = pmt.u8vector_elements(pmt.nth(1,msg_encrypted))
+        self.assertGreater(len(encrypted_vec), len(data), "Encrypted message should be longer than original (includes MAC)")
+        # Encrypted data should be different from original
+        self.assertNotEqual(encrypted_vec[:len(data)], data, "Encrypted data should differ from original")
 
 
 if __name__ == '__main__':
