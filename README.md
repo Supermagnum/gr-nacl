@@ -1,5 +1,10 @@
 gr-nacl: GNU Radio data encryption module
 ========
+
+**IMPORTANT NOTICE**: This is AI-generated code. The developer has a neurological condition that makes it impossible to use and learn traditional programming. The developer has put in a significant effort. This code might not work properly. Use at your own risk.
+
+---
+
 GNU Radio module for data encryption using NaCl library  
 
 **Features**  
@@ -43,8 +48,13 @@ GNU Radio 3.10+ (updated for compatibility)
 **Dependency**  
 The NaCl (pronounced 'salt') crypto library [2] by Daniel J. Bernstein, Tanja Lange and Peter Schwabe has a well maintained fork called 'libsodium' [3]. Follow the instructions to build and install it.
 
+**Minimum libsodium version**: 1.0.0 or later (recommended: 1.0.18+)
+
+The code uses standard libsodium functions (`crypto_box_easy`, `crypto_secretbox_easy`, `crypto_stream_xor`, etc.) that have been available since libsodium 1.0.0. The latest stable version is 1.0.20 (released May 2024), which includes additional features but is not required for this module.
+
 `git clone https://github.com/jedisct1/libsodium.git` // clone libsodium  
 `cd libsodium/`  
+`git checkout 1.0.20` // optional: checkout latest stable version  
 `./autogen.sh` // build libsodium  
 `./configure`  
 `make`  
