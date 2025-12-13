@@ -1,8 +1,31 @@
-This is the nacl-write-a-block package meant as a guide to building
-out-of-tree packages. To use the nacl blocks, the Python namespaces
-is in 'nacl', which is imported as:
+This is the gr-nacl package for GNU Radio, providing encryption blocks
+using the libsodium (NaCl) cryptographic library.
+
+**Python Usage**
+
+To use the nacl blocks, the Python namespace is 'nacl', which is imported as:
 
     import nacl
+
+**Available Blocks**
+
+- `nacl.generate_key(filename_key)` - Generate a secret key for symmetric encryption
+- `nacl.generate_keypair(filename_sk, filename_pk)` - Generate a keypair for public-key encryption
+- `nacl.encrypt_secret(filename_key)` - Encrypt messages using secret-key encryption
+- `nacl.decrypt_secret(filename_key)` - Decrypt messages using secret-key encryption
+- `nacl.encrypt_public(filename_pk, filename_sk)` - Encrypt messages using public-key encryption
+- `nacl.decrypt_public(filename_pk, filename_sk)` - Decrypt messages using public-key encryption
+- `nacl.crypt_tagged_stream(key, nonce, rotate_nonce, len_key)` - Stream encryption for tagged streams
+
+**Testing**
+
+Run the test suite with:
+    ctest
+
+All 8 test suites should pass, including:
+- Basic encryption/decryption tests
+- Round-trip validation tests
+- Test vector validation against libsodium
 
 See the Doxygen documentation for details about the blocks available
 in this package. A quick listing of the details can be found in Python
