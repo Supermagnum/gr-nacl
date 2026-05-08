@@ -20,6 +20,17 @@ The functionality can be tested with the example flowgraphs for GNU Radio Compan
 **Compatibility**  
 This module has been updated for GNU Radio 3.10+ compatibility. It uses `std::shared_ptr` instead of `boost::shared_ptr` and `std::vector` instead of the deprecated `__GR_VLA` macro.
 
+### GNU Radio 4.0
+
+For **GNU Radio 4**, switch to branch **`gnuradio4`**. The port is only under **`gnuradio4/`** (header-only blocks, **`find_package(gnuradio4)`**, CMake package **`gr-nacl4`**, target **`gnuradio4::gr-nacl`**). **`master`** keeps the 3.10 tree unchanged.
+
+```bash
+git fetch origin gnuradio4
+git checkout gnuradio4
+```
+
+See **`README.md` on branch `gnuradio4`** at the top for block list, dependencies, and build commands.
+
 **Recent Updates**  
 The codebase has been thoroughly reviewed and critical bugs have been fixed:
 - Fixed nonce rotation bug in tagged stream encryption
