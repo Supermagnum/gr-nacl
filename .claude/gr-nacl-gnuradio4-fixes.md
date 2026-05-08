@@ -2,6 +2,8 @@
 
 Reference for aligning the GR4 subtree (`gnuradio4/`) with an installed `gnuradio4` toolchain (GCC 14+ for `<print>`, CMake prefix `/opt/gnuradio4-gcc` or equivalent).
 
+Keep local CMake output under `gnuradio4/build/` (ignored via `gnuradio4/.gitignore`); do not commit `build-ci/` or similar generated trees.
+
 ## Configure / link
 
 - Use **g++-14** (or another compiler matching upstream GR4): `CMAKE_CXX_COMPILER=g++-14`
