@@ -38,6 +38,7 @@ From the repository root on branch **`gnuradio4`**, use a dedicated build direct
 git checkout gnuradio4
 
 # Example: GR4 installed under /opt/gnuradio4-gcc (adjust to your layout).
+# If you symlink that tree to /opt/gnuradio4, CMAKE_PREFIX_PATH can use either name.
 export GR4_PREFIX=/opt/gnuradio4-gcc
 
 # Optional: if configure fails to find CPR (pulled in by gnuradio4), set explicitly:
