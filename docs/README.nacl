@@ -37,12 +37,25 @@ blocks remain as nacl_*.xml.
 
 **Testing**
 
-Run the test suite with:
+Run the test suite from your build directory:
 
-    ctest
+    ctest --output-on-failure
 
-Tests cover basic encryption/decryption, round-trip validation, and
-libsodium test vectors.
+Last verified **2026-06-04**: **8/8 tests passed** (Linux, g++ 13.3, GNU Radio 3.10+, libsodium 1.0.22)
+
+| Test | Status |
+|------|--------|
+| `test_nacl` | Passed |
+| `qa_encrypt_public` | Passed |
+| `qa_decrypt_public` | Passed |
+| `qa_encrypt_secret` | Passed |
+| `qa_decrypt_secret` | Passed |
+| `qa_crypt_tagged_stream` | Passed |
+| `qa_test_vectors` | Passed |
+| `qa_libsodium_vectors` | Passed |
+
+Tests cover C++ unit tests, Python round-trip encryption/decryption, and
+libsodium test vector validation.
 
 See the Doxygen documentation for block details. After importing:
 

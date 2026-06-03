@@ -112,6 +112,26 @@ cmake --build . && ctest && sudo cmake --install .
 
 Example flowgraphs live under `examples/`. If `qa_test_vectors` or `qa_libsodium_vectors` fail with "Permission denied", run `chmod +x python/qa_*.py` and re-run `ctest`.
 
+### Build and test status
+
+Verified on **2026-06-04** (Linux 6.17, Ubuntu 24.04, CMake 3.28.3, **g++ 13.3**, GNU Radio 3.10+, **libsodium 1.0.22**):
+
+| Result | Detail |
+|--------|--------|
+| **Build** | `cmake --build build` — success |
+| **Tests** | **8/8 passed** (`ctest --output-on-failure`) |
+
+| Test | Status |
+|------|--------|
+| `test_nacl` | Passed |
+| `qa_encrypt_public` | Passed |
+| `qa_decrypt_public` | Passed |
+| `qa_encrypt_secret` | Passed |
+| `qa_decrypt_secret` | Passed |
+| `qa_crypt_tagged_stream` | Passed |
+| `qa_test_vectors` | Passed |
+| `qa_libsodium_vectors` | Passed |
+
 **Compatibility**
 
 GNU Radio 3.10+ with `std::shared_ptr` instead of `boost::shared_ptr` and `std::vector` instead of the deprecated `__GR_VLA` macro.
