@@ -28,9 +28,5 @@ install(FILES
     generate_key.h
     encrypt_secret.h
     decrypt_secret.h
-    crypt_tagged_stream.h
-    generate_kem_keypair.h
-    encrypt_kem.h
-    decrypt_kem.h
-    hash_sha3.h DESTINATION include/nacl
+    crypt_tagged_stream.h DESTINATION include/nacl
 )

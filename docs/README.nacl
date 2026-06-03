@@ -1,49 +1,34 @@
 This is the gr-nacl package for GNU Radio, providing encryption blocks
 using the libsodium (NaCl) cryptographic library.
 
-gr-nacl is compiled and built against libsodium 1.0.22:
-https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE
-
-CMake requires libsodium 1.0.22 or later (find_package(Sodium REQUIRED),
-imported target sodium::sodium).
-
 **Python Usage**
 
-Import the installed module as:
+To use the nacl blocks, the Python namespace is 'nacl', which is imported as:
 
-    from gnuradio import nacl
-
-Legacy flowgraphs may use `import nacl` if your environment still exposes
-that top-level name.
+    import nacl
 
 **Available Blocks**
 
-- nacl.generate_key(filename_key) - Generate a secret key for symmetric encryption
-- nacl.generate_keypair(filename_sk, filename_pk) - Generate a keypair for public-key encryption
-- nacl.encrypt_secret(filename_key) - Encrypt messages using secret-key encryption
-- nacl.decrypt_secret(filename_key) - Decrypt messages using secret-key encryption
-- nacl.encrypt_public(filename_pk, filename_sk) - Encrypt messages using public-key encryption
-- nacl.decrypt_public(filename_pk, filename_sk) - Decrypt messages using public-key encryption
-- nacl.crypt_tagged_stream(key, nonce, rotate_nonce, len_key) - Stream encryption for tagged streams
-- nacl.generate_kem_keypair(filename_sk, filename_pk) - X-Wing KEM keypair (libsodium 1.0.22+)
-- nacl.encrypt_kem(filename_pk) - KEM encapsulation plus secretbox (libsodium 1.0.22+)
-- nacl.decrypt_kem(filename_sk) - KEM decapsulation plus secretbox (libsodium 1.0.22+)
-- nacl.hash_sha3(sha3_512=False) - SHA3-256 or SHA3-512 hash of message PDUs (libsodium 1.0.22+)
-
-**GRC blocks**
-
-Newer blocks ship as YAML definitions in grc/ (nacl_* .block.yml). Legacy
-blocks remain as nacl_*.xml.
+- `nacl.generate_key(filename_key)` - Generate a secret key for symmetric encryption
+- `nacl.generate_keypair(filename_sk, filename_pk)` - Generate a keypair for public-key encryption
+- `nacl.encrypt_secret(filename_key)` - Encrypt messages using secret-key encryption
+- `nacl.decrypt_secret(filename_key)` - Decrypt messages using secret-key encryption
+- `nacl.encrypt_public(filename_pk, filename_sk)` - Encrypt messages using public-key encryption
+- `nacl.decrypt_public(filename_pk, filename_sk)` - Decrypt messages using public-key encryption
+- `nacl.crypt_tagged_stream(key, nonce, rotate_nonce, len_key)` - Stream encryption for tagged streams
 
 **Testing**
 
 Run the test suite with:
-
     ctest
 
-Tests cover basic encryption/decryption, round-trip validation, and
-libsodium test vectors.
+All 8 test suites should pass, including:
+- Basic encryption/decryption tests
+- Round-trip validation tests
+- Test vector validation against libsodium
 
-See the Doxygen documentation for block details. After importing:
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
 
     help(nacl)

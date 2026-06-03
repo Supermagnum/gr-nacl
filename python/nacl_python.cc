@@ -30,10 +30,6 @@
 #include <nacl/generate_keypair.h>
 #include <nacl/generate_key.h>
 #include <nacl/crypt_tagged_stream.h>
-#include <nacl/generate_kem_keypair.h>
-#include <nacl/encrypt_kem.h>
-#include <nacl/decrypt_kem.h>
-#include <nacl/hash_sha3.h>
 
 namespace py = pybind11;
 
@@ -113,47 +109,6 @@ void bind_crypt_tagged_stream(py::module& m)
              py::arg("len_key") = "packet_len");
 }
 
-void bind_generate_kem_keypair(py::module& m)
-{
-    using generate_kem_keypair = gr::nacl::generate_kem_keypair;
-
-    py::class_<generate_kem_keypair, gr::block, std::shared_ptr<generate_kem_keypair>>(
-        m, "generate_kem_keypair")
-        .def(py::init(&generate_kem_keypair::make),
-             py::arg("filename_sk"),
-             py::arg("filename_pk"));
-}
-
-void bind_encrypt_kem(py::module& m)
-{
-    using encrypt_kem = gr::nacl::encrypt_kem;
-
-    py::class_<encrypt_kem, gr::block, std::shared_ptr<encrypt_kem>>(
-        m, "encrypt_kem")
-        .def(py::init(&encrypt_kem::make),
-             py::arg("filename_pk"));
-}
-
-void bind_decrypt_kem(py::module& m)
-{
-    using decrypt_kem = gr::nacl::decrypt_kem;
-
-    py::class_<decrypt_kem, gr::block, std::shared_ptr<decrypt_kem>>(
-        m, "decrypt_kem")
-        .def(py::init(&decrypt_kem::make),
-             py::arg("filename_sk"));
-}
-
-void bind_hash_sha3(py::module& m)
-{
-    using hash_sha3 = gr::nacl::hash_sha3;
-
-    py::class_<hash_sha3, gr::block, std::shared_ptr<hash_sha3>>(
-        m, "hash_sha3")
-        .def(py::init(&hash_sha3::make),
-             py::arg("sha3_512") = false);
-}
-
 PYBIND11_MODULE(nacl_python, m)
 {
     m.doc() = "Python bindings for gr-nacl";
@@ -165,9 +120,5 @@ PYBIND11_MODULE(nacl_python, m)
     bind_generate_keypair(m);
     bind_generate_key(m);
     bind_crypt_tagged_stream(m);
-    bind_generate_kem_keypair(m);
-    bind_encrypt_kem(m);
-    bind_decrypt_kem(m);
-    bind_hash_sha3(m);
 }
 

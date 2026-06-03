@@ -24,9 +24,5 @@ install(FILES
     nacl_generate_key.xml
     nacl_encrypt_secret.xml
     nacl_decrypt_secret.xml
-    nacl_crypt_tagged_stream.xml
-    nacl_generate_kem_keypair.block.yml
-    nacl_encrypt_kem.block.yml
-    nacl_decrypt_kem.block.yml
-    nacl_hash_sha3.block.yml DESTINATION share/gnuradio/grc/blocks
+    nacl_crypt_tagged_stream.xml DESTINATION share/gnuradio/grc/blocks
 )
