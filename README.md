@@ -86,6 +86,27 @@ Include in C++: `#include <gnuradio-4.0/nacl.hpp>` (or individual headers under 
 
 ---
 
+### Build and test status
+
+Verified on **2026-06-04** (Linux 6.17, Ubuntu 24.04, CMake 3.28.3, **g++-14**, GNU Radio 4 at `/opt/gnuradio4-gcc`, **libsodium 1.0.22**):
+
+| Result | Detail |
+|--------|--------|
+| **Build** | `cmake --build gnuradio4/build` — success |
+| **Tests** | **7/7 passed** (`ctest --test-dir gnuradio4/build`) |
+
+| Test | Status |
+|------|--------|
+| `qa_CryptTaggedStream` | Passed |
+| `qa_EncryptSecret` | Passed |
+| `qa_DecryptSecret` | Passed |
+| `qa_EncryptPublic` | Passed |
+| `qa_DecryptPublic` | Passed |
+| `qa_GenerateSymmetricKey` | Passed |
+| `qa_GeneratePublicKeypair` | Passed |
+
+---
+
 **Contact**
 
 Stefan Wunsch  

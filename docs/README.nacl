@@ -1,34 +1,43 @@
-This is the gr-nacl package for GNU Radio, providing encryption blocks
-using the libsodium (NaCl) cryptographic library.
+This is the gr-nacl package for GNU Radio.
 
-**Python Usage**
+**Branch `gnuradio4`:** GNU Radio **4.0** blocks live under `gnuradio4/` (C++23,
+Boost.UT tests). See the root `README.md` on this branch for build instructions.
 
-To use the nacl blocks, the Python namespace is 'nacl', which is imported as:
+**Branch `master`:** GNU Radio **3.x** Python blocks and GRC flowgraphs. See
+`README.md` and this file on branch `master` for Python usage.
 
-    import nacl
+---
 
-**Available Blocks**
+### libsodium
 
-- `nacl.generate_key(filename_key)` - Generate a secret key for symmetric encryption
-- `nacl.generate_keypair(filename_sk, filename_pk)` - Generate a keypair for public-key encryption
-- `nacl.encrypt_secret(filename_key)` - Encrypt messages using secret-key encryption
-- `nacl.decrypt_secret(filename_key)` - Decrypt messages using secret-key encryption
-- `nacl.encrypt_public(filename_pk, filename_sk)` - Encrypt messages using public-key encryption
-- `nacl.decrypt_public(filename_pk, filename_sk)` - Decrypt messages using public-key encryption
-- `nacl.crypt_tagged_stream(key, nonce, rotate_nonce, len_key)` - Stream encryption for tagged streams
+Built and tested against [libsodium 1.0.22-RELEASE](https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE).
 
-**Testing**
+---
 
-Run the test suite with:
-    ctest
+### GR4 tests (branch `gnuradio4`)
 
-All 8 test suites should pass, including:
-- Basic encryption/decryption tests
-- Round-trip validation tests
-- Test vector validation against libsodium
+Run from a build directory under `gnuradio4/`:
 
-See the Doxygen documentation for details about the blocks available
-in this package. A quick listing of the details can be found in Python
-after importing by using:
+    ctest --test-dir gnuradio4/build --output-on-failure
 
-    help(nacl)
+Last verified **2026-06-04**: **7/7 tests passed**
+
+- qa_CryptTaggedStream
+- qa_EncryptSecret
+- qa_DecryptSecret
+- qa_EncryptPublic
+- qa_DecryptPublic
+- qa_GenerateSymmetricKey
+- qa_GeneratePublicKeypair
+
+---
+
+### GR3 Python blocks (branch `master` only)
+
+Import on branch `master` after installing the GR3 module:
+
+    from gnuradio import nacl
+
+Blocks include `encrypt_public`, `encrypt_secret`, `crypt_tagged_stream`,
+`generate_kem_keypair`, `encrypt_kem`, `decrypt_kem`, and `hash_sha3`
+(libsodium 1.0.22+). See `docs/README.nacl` on branch `master` for the full list.
