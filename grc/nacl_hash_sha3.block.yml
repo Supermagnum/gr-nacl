@@ -1,0 +1,37 @@
+id: nacl_hash_sha3
+label: Hash SHA3
+category: '[NACL]'
+
+parameters:
+-   id: sha3_512
+    label: SHA3-512
+    dtype: bool
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['SHA3-256', 'SHA3-512']
+
+inputs:
+-   domain: message
+    id: Msg in
+    optional: true
+
+outputs:
+-   domain: message
+    id: Msg hash
+    optional: true
+
+templates:
+    imports: import gnuradio.nacl as nacl
+    make: nacl.hash_sha3(${sha3_512})
+
+cpp_templates:
+    includes: ['#include <nacl/hash_sha3.h>']
+    declarations: 'nacl::hash_sha3::sptr ${id};'
+    make: 'this->${id} = nacl::hash_sha3::make(${sha3_512});'
+    link: ['gnuradio::gnuradio-nacl']
+
+documentation: |-
+    Compute SHA3-256 or SHA3-512 on incoming byte-vector PDUs tagged with
+    msg_clear and publish the digest as hash_sha3_256 or hash_sha3_512.
+
+file_format: 1

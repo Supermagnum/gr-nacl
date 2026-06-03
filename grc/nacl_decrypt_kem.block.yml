@@ -1,0 +1,34 @@
+id: nacl_decrypt_kem
+label: Decrypt KEM
+category: '[NACL]'
+
+parameters:
+-   id: filename_sk
+    label: Filename secret-key (receiver)
+    dtype: string
+
+inputs:
+-   domain: message
+    id: Msg encrypted
+    optional: true
+
+outputs:
+-   domain: message
+    id: Msg decrypted
+    optional: true
+
+templates:
+    imports: import gnuradio.nacl as nacl
+    make: nacl.decrypt_kem(${filename_sk})
+
+cpp_templates:
+    includes: ['#include <nacl/decrypt_kem.h>']
+    declarations: 'nacl::decrypt_kem::sptr ${id};'
+    make: 'this->${id} = nacl::decrypt_kem::make(${filename_sk});'
+    link: ['gnuradio::gnuradio-nacl']
+
+documentation: |-
+    Decapsulate the shared secret with X-Wing KEM using the receiver secret
+    key, then decrypt the secretbox ciphertext from the incoming PDU.
+
+file_format: 1

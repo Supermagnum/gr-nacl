@@ -1,98 +1,135 @@
 gr-nacl: GNU Radio data encryption module
 ========
 
-GNU Radio module for data encryption using NaCl library  
+**IMPORTANT NOTICE**: This is AI-generated code. The developer has a neurological condition that makes it impossible to use and learn traditional programming. The developer has put in a significant effort. This code might not work properly. Use at your own risk.
 
-**Features**  
-The gr-nacl module for GNU Radio provides functionality from the NaCl crypto library implemented with the fork libsodium (see section 'Dependency' for more information). This contains public-key and secret-key encryption. The difference is explained, e.g., on Wikipedia [0]. The implementation is based on encryption of messages, which are passed in GNU Radio via the message system. Check out the GNU Radio documentation for further information [1]. Furthermore, a byte stream encryption method via tagged streams is implemented.
+GNU Radio **3.10+** out-of-tree module for data encryption using NaCl-style primitives from **libsodium** (public-key and secret-key constructs, streamed PDUs, post-quantum KEM, and SHA-3 hashing). Symmetric vs public-key encryption is explained, for example, on Wikipedia [0].
 
-**Testing**  
-The module includes comprehensive test coverage:
-- All 8 test suites pass (100% pass rate)
-- Round-trip encryption/decryption validation
-- Test vector validation against libsodium behavior
-- Multiple message size testing (short, medium, long, edge cases)
-- Nonce randomness and uniqueness verification
-- Ciphertext structure validation (proper MAC inclusion)
-
-The functionality can be tested with the example flowgraphs for GNU Radio Companion at the subfolder examples/ or directly with the provided test-cases using `ctest`.
-
-**Compatibility**  
-This module has been updated for GNU Radio 3.10+ compatibility. It uses `std::shared_ptr` instead of `boost::shared_ptr` and `std::vector` instead of the deprecated `__GR_VLA` macro.
-
-### GNU Radio 4.0
-
-For **GNU Radio 4**, switch to branch **`gnuradio4`**. The port is only under **`gnuradio4/`** (header-only blocks, **`find_package(gnuradio4)`**, CMake package **`gr-nacl4`**, target **`gnuradio4::gr-nacl`**). **`master`** keeps the 3.10 tree unchanged.
+**Branch:** this is the **`master`** branch for **GNU Radio 3.x** only. For **GNU Radio 4.0**, use branch **`gnuradio4`** (separate development line).
 
 ```bash
 git fetch origin gnuradio4
 git checkout gnuradio4
 ```
 
-See **`README.md` on branch `gnuradio4`** at the top for block list, dependencies, and build commands.
+See `README.md` on branch **`gnuradio4`** for the GR4 block library under `gnuradio4/`.
 
-**Recent Updates**  
-The codebase has been thoroughly reviewed and critical bugs have been fixed:
-- Fixed nonce rotation bug in tagged stream encryption
-- Fixed key generation size bug (now correctly generates 32-byte keys)
-- Fixed Python 2/3 compatibility issues in tests
-- Added comprehensive test vector validation
-- All tests passing with proper assertions
+---
 
-The implementation correctly uses libsodium's cryptographic primitives and has been validated against expected behavior.
+### libsodium requirement
 
-**Install guide (Linux)**  
-Change to any folder in your home directory and enter following commands in your terminal. Check out the section 'Dependency' first. As well, you can install GNU Radio with PyBOMBS and use the provided install recipe for gr-nacl. The recipe builds and installs the dependency automatically.
+gr-nacl is compiled and built against **[libsodium 1.0.22-RELEASE](https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE)**. CMake enforces a minimum of 1.0.22 via `find_package(Sodium REQUIRED)` and the imported target `sodium::sodium`.
 
-`git clone https://github.com/Supermagnum/gr-nacl.git` // clone this repository  
-`cd gr-nacl/`  
-`mkdir build` // make build folder  
-`cd build/`  
-`cmake ../` // build makefiles  
-`make` // build toolbox  
-`ctest` // run tests, check if all have passed, the option -V provides an extended output  
-`sudo make install` // install toolbox
+That release adds APIs used by this project:
 
-**Install guide (Mac OS X)**  
-The following commands will work if you have installed Gnuradio and libsodium via Macports.
-Change to any folder in your home directory and enter following commands in your terminal.
+- **X-Wing KEM** — hybrid ML-KEM768 + X25519 via `crypto_kem_*()`.
+- **SHA-3** — `crypto_hash_sha3256_*()` and `crypto_hash_sha3512_*()`.
 
-`git clone https://github.com/Supermagnum/gr-nacl.git` // clone this repository  
-`cd gr-nacl/`  
-`mkdir build` // make build folder  
-`cd build/`  
-`cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/local  ../` // build makefiles  
-`make` // build toolbox  
-`ctest` // run tests, check if all have passed, the option -V provides an extended output. This actually did not work for me  
-`sudo make install` // install toolbox
+Install **libsodium** 1.0.22 before building gr-nacl (run these commands in a **libsodium** source tree, not in gr-nacl — gr-nacl has no `autogen.sh`):
 
-**Development platform**  
-Ubuntu 15.04  
-GNU Radio 3.7.6.1 (original)  
-GNU Radio 3.10+ (updated for compatibility)  
-Python 3.x (tests updated for Python 3 compatibility)  
+```bash
+git clone https://github.com/jedisct1/libsodium.git
+cd libsodium
+git checkout 1.0.22-RELEASE
+./autogen.sh
+./configure --prefix=/usr/local
+make -j"$(nproc)"
+sudo make install
+sudo ldconfig    # Linux
+```
 
-**Dependency**  
-The NaCl (pronounced 'salt') crypto library [2] by Daniel J. Bernstein, Tanja Lange and Peter Schwabe has a well maintained fork called 'libsodium' [3]. Follow the instructions to build and install it.
+If libsodium is already installed under `/usr/local`, skip the steps above.
 
-**Minimum libsodium version**: 1.0.0 or later (recommended: 1.0.18+)
+Verify: `pkg-config --modversion libsodium` should print `1.0.22` or later.
 
-The code uses standard libsodium functions (`crypto_box_easy`, `crypto_secretbox_easy`, `crypto_stream_xor`, etc.) that have been available since libsodium 1.0.0. The latest stable version is 1.0.20 (released May 2024), which includes additional features but is not required for this module.
+---
 
-`git clone https://github.com/jedisct1/libsodium.git` // clone libsodium  
-`cd libsodium/`  
-`git checkout 1.0.20` // optional: checkout latest stable version  
-`./autogen.sh` // build libsodium  
-`./configure`  
-`make`  
-`sudo make install` // install libsodium
+### Blocks (namespace `gr::nacl`)
 
-**Contact**  
+| Block | libsodium API | Notes |
+|-------|---------------|-------|
+| `generate_key` | random key file | Symmetric key generation |
+| `generate_keypair` | `crypto_box_keypair` | Public-key keypair files |
+| `encrypt_secret` / `decrypt_secret` | `crypto_secretbox_*` | Message PDUs |
+| `encrypt_public` / `decrypt_public` | `crypto_box_*` | Message PDUs |
+| `crypt_tagged_stream` | `crypto_stream_xor` | Tagged byte streams |
+| `generate_kem_keypair` | `crypto_kem_keypair` | X-Wing KEM key files (**1.0.22+**) |
+| `encrypt_kem` / `decrypt_kem` | `crypto_kem_*` + `crypto_secretbox_*` | KEM + secretbox PDUs (**1.0.22+**) |
+| `hash_sha3` | `crypto_hash_sha3256_*` / `crypto_hash_sha3512_*` | SHA3-256 or SHA3-512 digest PDUs (**1.0.22+**) |
+
+GRC block definitions live in `grc/` (legacy `.xml` plus YAML `.block.yml` for newer blocks). See GNU Radio documentation on message passing and tagged streams [1].
+
+**KEM message PDU layout**
+
+- **encrypt_kem** input: `msg_clear` on port `Msg clear`.
+- **encrypt_kem** output: `kem_ciphertext`, `nonce`, `msg_encrypted` on port `Msg encrypted`.
+- **decrypt_kem** reverses that layout and publishes `msg_decrypted` on port `Msg decrypted`.
+
+**Python usage**
+
+```python
+from gnuradio import nacl
+
+nacl.encrypt_public(pk_file, sk_file)
+nacl.generate_kem_keypair(sk_file, pk_file)
+nacl.encrypt_kem(pk_file)
+nacl.decrypt_kem(sk_file)
+nacl.hash_sha3(sha3_512=False)
+```
+
+---
+
+### Configure, build, test, and install
+
+From the **gr-nacl** repository root on branch **`master`** (use `cmake`, not `autogen.sh`):
+
+```bash
+git clone https://github.com/Supermagnum/gr-nacl.git
+cd gr-nacl
+git checkout master
+
+mkdir -p build && cd build
+cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_PREFIX_PATH=/usr/local
+cmake --build . -j"$(nproc)"
+ctest --output-on-failure
+sudo cmake --install .
+```
+
+CMake **3.5+** is required.
+
+**Mac OS X**
+
+With GNU Radio and libsodium from MacPorts:
+
+```bash
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/local ..
+cmake --build . && ctest && sudo cmake --install .
+```
+
+**Testing**
+
+Example flowgraphs live under `examples/`. If `qa_test_vectors` or `qa_libsodium_vectors` fail with "Permission denied", run `chmod +x python/qa_*.py` and re-run `ctest`.
+
+**Compatibility**
+
+GNU Radio 3.10+ with `std::shared_ptr` instead of `boost::shared_ptr` and `std::vector` instead of the deprecated `__GR_VLA` macro.
+
+---
+
+**Development platform (historical)**
+
+Ubuntu 15.04, GNU Radio 3.7.6.1 (original), GNU Radio 3.10+ (updated), Python 3.x.
+
+**Contact**
+
 Stefan Wunsch  
 stefan.wunsch[at]student.kit.edu
 
-**Links**  
+**Links**
+
 [0] https://en.wikipedia.org/wiki/Public-key_cryptography, https://en.wikipedia.org/wiki/Symmetric-key_algorithm  
 [1] http://gnuradio.org/doc/doxygen/, http://gnuradio.org/doc/doxygen/page_msg_passing.html, http://gnuradio.org/doc/doxygen/page_tagged_stream_blocks.html  
 [2] http://nacl.cr.yp.to/  
-[3] http://doc.libsodium.org/, https://github.com/jedisct1/libsodium
+[3] http://doc.libsodium.org/, https://github.com/jedisct1/libsodium, https://github.com/jedisct1/libsodium/releases/tag/1.0.22-RELEASE
