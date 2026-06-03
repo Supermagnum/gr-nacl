@@ -20,7 +20,7 @@
 ########################################################################
 # Project setup
 ########################################################################
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.5)
 project(gr-nacl CXX C)
 if(APPLE)
     include_directories(/opt/local/include)
@@ -108,7 +108,14 @@ endif(APPLE)
 ########################################################################
 find_package(CppUnit)
 find_package(Doxygen)
-find_package(Sodium)
+find_package(Sodium REQUIRED)
+if(NOT Sodium_FOUND)
+    message(FATAL_ERROR "libsodium is required but was not found.")
+endif()
+if(Sodium_VERSION VERSION_LESS "1.0.22")
+    message(FATAL_ERROR
+        "Found libsodium ${Sodium_VERSION}, but gr-nacl requires at least 1.0.22.")
+endif()
 
 # Search for GNU Radio and its components and versions. Add any
 # components required to the list of GR_REQUIRED_COMPONENTS (in all
@@ -141,14 +148,12 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS}
     ${GNURADIO_ALL_INCLUDE_DIRS}
-    ${SODIUM_INCLUDE_DIRS}
 )
 
 link_directories(
     ${Boost_LIBRARY_DIRS}
     ${CPPUNIT_LIBRARY_DIRS}
     ${GNURADIO_RUNTIME_LIBRARY_DIRS}
-    ${SODIUM_LIBRARY_DIRS}
 )
 
 # Set component parameters

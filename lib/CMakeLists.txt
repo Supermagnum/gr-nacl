@@ -33,6 +33,10 @@ list(APPEND nacl_sources
     encrypt_secret_impl.cc
     decrypt_secret_impl.cc
     crypt_tagged_stream_impl.cc
+    generate_kem_keypair_impl.cc
+    encrypt_kem_impl.cc
+    decrypt_kem_impl.cc
+    hash_sha3_impl.cc
 )
 
 set(nacl_sources "${nacl_sources}" PARENT_SCOPE)
@@ -42,7 +46,7 @@ if(NOT nacl_sources)
 endif(NOT nacl_sources)
 
 add_library(gnuradio-nacl SHARED ${nacl_sources})
-target_link_libraries(gnuradio-nacl ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${SODIUM_LIBRARIES})
+target_link_libraries(gnuradio-nacl ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} sodium::sodium)
 set_target_properties(gnuradio-nacl PROPERTIES DEFINE_SYMBOL "gnuradio_nacl_EXPORTS")
 
 if(APPLE)
@@ -79,7 +83,7 @@ target_link_libraries(
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   ${CPPUNIT_LIBRARIES}
-  ${SODIUM_LIBRARIES}
+  sodium::sodium
   gnuradio-nacl
 )
 
